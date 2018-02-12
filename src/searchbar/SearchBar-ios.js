@@ -16,7 +16,7 @@ import ViewPropTypes from '../config/ViewPropTypes';
 import Input from '../input/Input';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const IOS_GRAY = '#7d7d7d';
+const IOS_GRAY = '#8e8e93';
 
 class SearchBar extends Component {
   focus = () => {
@@ -40,13 +40,17 @@ class SearchBar extends Component {
 
   onFocus = () => {
     this.props.onFocus && this.props.onFocus();
-    UIManager.configureNextLayoutAnimation && LayoutAnimation.easeInEaseOut();
+    if (!this.props.hideCancelButton && UIManager.configureNextLayoutAnimation) {
+      LayoutAnimation.easeInEaseOut();
+    }
     this.setState({ hasFocus: true });
   };
 
   onBlur = () => {
     this.props.onBlur && this.props.onBlur();
-    UIManager.configureNextLayoutAnimation && LayoutAnimation.easeInEaseOut();
+    if (!this.props.hideCancelButton && UIManager.configureNextLayoutAnimation) {
+      LayoutAnimation.easeInEaseOut();
+    }
     this.setState({ hasFocus: false });
   };
 
@@ -65,7 +69,7 @@ class SearchBar extends Component {
 
   render() {
     const {
-      showCancelButton,
+      hideCancelButton,
       cancelButtonTitle,
       clearIcon,
       containerStyle,
@@ -82,8 +86,9 @@ class SearchBar extends Component {
     const { hasFocus, isEmpty } = this.state;
     const { style: loadingStyle, ...otherLoadingProps } = loadingProps;
     const searchIcon = (
-      <Ionicon size={20} name={'ios-search'} color={IOS_GRAY} />
+      <Ionicon size={19} name={'ios-search'} color={IOS_GRAY} />
     );
+
     return (
       <View style={styles.container}>
         <Input
@@ -95,7 +100,7 @@ class SearchBar extends Component {
           inputStyle={[styles.input, inputStyle]}
           containerStyle={[
             styles.inputContainer,
-            !hasFocus && { width: SCREEN_WIDTH - 32, marginRight: 15 },
+            (!hasFocus || hideCancelButton) && { width: SCREEN_WIDTH - 16, marginRight: 8 },
             containerStyle,
           ]}
           leftIcon={noIcon ? undefined : leftIcon ? leftIcon : searchIcon}
@@ -131,14 +136,14 @@ class SearchBar extends Component {
             rightIconContainerStyle,
           ]}
         />
-        {showCancelButton && <Button title={cancelButtonTitle} onPress={this.cancel} />}
+        {!hideCancelButton && <Button title={cancelButtonTitle} onPress={this.cancel} />}
       </View>
     );
   }
 }
 
 SearchBar.propTypes = {
-  showCancelButton: PropTypes.bool,
+  hideCancelButton: PropTypes.bool,
   cancelButtonTitle: PropTypes.string,
   clearIcon: PropTypes.bool,
   loadingProps: PropTypes.object,
@@ -155,7 +160,7 @@ SearchBar.propTypes = {
 };
 
 SearchBar.defaultProps = {
-  showCancelButton: true,
+  hideCancelButton: false,
   cancelButtonTitle: 'Cancel',
   clearIcon: true,
   loadingProps: {},
@@ -169,21 +174,22 @@ SearchBar.defaultProps = {
 const styles = StyleSheet.create({
   container: {
     width: SCREEN_WIDTH,
-    backgroundColor: '#f5f5f5',
-    paddingBottom: 13,
-    paddingTop: 13,
+    backgroundColor: '#d8d8d8',
+    paddingBottom: 10,
+    paddingTop: 10,
     flexDirection: 'row',
   },
   input: {
     flex: 1,
     marginLeft: 6,
+    fontSize: 17
   },
   inputContainer: {
     borderBottomWidth: 0,
-    backgroundColor: '#dcdce1',
-    borderRadius: 9,
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
     height: 36,
-    marginLeft: 15,
+    marginLeft: 8,
   },
   rightIconContainerStyle: {
     marginRight: 8,
