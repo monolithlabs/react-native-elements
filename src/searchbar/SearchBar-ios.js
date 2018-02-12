@@ -65,6 +65,7 @@ class SearchBar extends Component {
 
   render() {
     const {
+      showCancelButton,
       cancelButtonTitle,
       clearIcon,
       containerStyle,
@@ -130,13 +131,14 @@ class SearchBar extends Component {
             rightIconContainerStyle,
           ]}
         />
-        <Button title={cancelButtonTitle} onPress={this.cancel} />
+        {showCancelButton && <Button title={cancelButtonTitle} onPress={this.cancel} />}
       </View>
     );
   }
 }
 
 SearchBar.propTypes = {
+  showCancelButton: PropTypes.bool,
   cancelButtonTitle: PropTypes.string,
   clearIcon: PropTypes.bool,
   loadingProps: PropTypes.object,
@@ -153,6 +155,7 @@ SearchBar.propTypes = {
 };
 
 SearchBar.defaultProps = {
+  showCancelButton: true,
   cancelButtonTitle: 'Cancel',
   clearIcon: true,
   loadingProps: {},
